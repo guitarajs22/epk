@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrew Silva — EPK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f2ede6;
+      --bg2:       #ede5da;
+      --bg3:       #e0d5c5;
+      --ink:       #1a1410;
+      --ink-dim:   #6b5f52;
+      --accent:    #c02a2a;
+      --accent2:   #8b1e1e;
+      --rule:      rgba(26,20,16,0.12);
+      --cream:     #faf6f0;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', Helvetica, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 52px;
+      background: linear-gradient(to bottom, rgba(242,237,230,0.97) 60%, rgba(242,237,230,0));
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+      font-weight: 400;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* warm vintage overlay */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(180,100,40,0.18) 0%,
+        rgba(26,20,16,0.0) 40%,
+        rgba(26,20,16,0.72) 75%,
+        rgba(26,20,16,0.92) 100%
+      );
+    }
+
+    /* sepia tint filter on image */
+    .hero-img { filter: sepia(30%) contrast(1.05) brightness(0.95); }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 52px 60px;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(60px, 9vw, 130px);
+      font-weight: 700;
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      text-wrap: balance;
+    }
+
+    .hero-name .italic { font-style: italic; color: rgba(250,246,240,0.75); }
+
+    .hero-tagline {
+      margin-top: 22px;
+      font-size: 15px;
+      color: rgba(250,246,240,0.65);
+      letter-spacing: 0.04em;
+      font-weight: 300;
+      max-width: 500px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 28px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--cream);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-primary:hover { background: var(--accent2); }
+
+    .btn-ghost {
+      display: inline-block;
+      border: 1px solid rgba(250,246,240,0.4);
+      color: rgba(250,246,240,0.75);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      text-decoration: none;
+      font-weight: 400;
+      transition: border-color 0.2s, color 0.2s;
+      font-family: var(--font-body);
+    }
+    .btn-ghost:hover { border-color: var(--cream); color: var(--cream); }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 88px 52px;
+    }
+
+    .section-rule {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+
+    .section-rule::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 2px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── BIO ── */
+    #bio {
+      background: var(--cream);
+      border-top: 1px solid var(--rule);
+    }
+
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .bio-body {
+      font-size: 17px;
+      line-height: 1.9;
+      color: var(--ink);
+      font-weight: 300;
+    }
+
+    .bio-body p + p { margin-top: 20px; }
+
+    .bio-pull {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 46px);
+      font-style: italic;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink);
+      border-top: 2px solid var(--accent);
+      padding-top: 28px;
+    }
+
+    .bio-comparisons {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .compare-label {
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 14px;
+    }
+
+    .compare-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .compare-tag {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-style: italic;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      padding: 5px 14px;
+      font-weight: 400;
+    }
+
+    /* ── DISCOGRAPHY ── */
+    #music {
+      background: var(--bg2);
+      border-top: 1px solid var(--rule);
+    }
+
+    .disc-intro {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 52px;
+      color: var(--ink);
+      max-width: 600px;
+    }
+
+    .disc-intro em { font-style: italic; color: var(--accent); }
+
+    .tracks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .track-row {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 24px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--rule);
+      cursor: default;
+      transition: background 0.15s;
+      border-radius: 2px;
+    }
+
+    .track-row:first-child { border-top: 1px solid var(--rule); }
+
+    .track-row:hover { background: rgba(192,42,42,0.04); }
+
+    .track-num {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--accent);
+      text-align: center;
+      opacity: 0.6;
+    }
+
+    .track-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .track-sub {
+      font-size: 12px;
+      color: var(--ink-dim);
+      margin-top: 2px;
+      letter-spacing: 0.06em;
+    }
+
+    .track-type {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid currentColor;
+      padding: 3px 10px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .track-row--with-embed {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      grid-template-rows: auto auto;
+      gap: 0 24px;
+      padding: 22px 0 16px;
+    }
+
+    .track-row--with-embed .track-info { grid-column: 2; grid-row: 1; }
+    .track-row--with-embed .track-num  { grid-column: 1; grid-row: 1; align-self: center; }
+    .track-row--with-embed .track-type { grid-column: 3; grid-row: 1; align-self: center; }
+
+    .track-embed {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .track-row--with-embed { grid-template-columns: 40px 1fr; }
+      .track-row--with-embed .track-type { display: none; }
+    }
+
+    /* ── SHOW HISTORY ── */
+    #shows {
+      background: var(--bg2);
+      border-top: 1px solid var(--rule);
+    }
+
+    .shows-heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 52px;
+      color: var(--ink);
+      max-width: 600px;
+    }
+
+    .shows-heading em { font-style: italic; color: var(--accent); }
+
+    .shows-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .show-row {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      align-items: center;
+      gap: 32px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.15s;
+      border-radius: 2px;
+    }
+
+    .show-row:first-child { border-top: 1px solid var(--rule); }
+    .show-row:hover { background: rgba(192,42,42,0.04); }
+
+    .show-row--featured .show-venue {
+      color: var(--accent);
+    }
+
+    .show-date {
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .show-month {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .show-year {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink-dim);
+    }
+
+    .show-venue {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .show-detail {
+      font-size: 12px;
+      color: var(--ink-dim);
+      margin-top: 3px;
+      letter-spacing: 0.06em;
+    }
+
+    .show-badge {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid currentColor;
+      padding: 3px 10px;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    @media (max-width: 800px) {
+      .show-row { grid-template-columns: 56px 1fr; gap: 16px; }
+      .show-badge { display: none; }
+    }
+
+    /* ── VIDEO ── */
+    #video {
+      background: var(--ink);
+      border-top: none;
+      padding-top: 88px;
+      padding-bottom: 88px;
+    }
+
+    #video .section-label { color: var(--accent); }
+    #video .section-rule::before { background: var(--accent); }
+
+    .video-heading {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 54px);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 40px;
+      max-width: 560px;
+      line-height: 1.1;
+    }
+
+    .video-heading em { font-style: italic; color: rgba(250,246,240,0.55); }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16/9;
+      background: #0a0806;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .video-placeholder-bg {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        #111 0px, #111 10px,
+        #0d0d0d 10px, #0d0d0d 20px
+      );
+      opacity: 0.6;
+    }
+
+    .video-play-btn {
+      position: relative;
+      z-index: 2;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .video-wrapper:hover .video-play-btn {
+      transform: scale(1.08);
+      background: var(--accent2);
+    }
+
+    .video-label {
+      position: absolute;
+      bottom: 20px;
+      left: 24px;
+      z-index: 2;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(250,246,240,0.5);
+    }
+
+    .video-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: rgba(250,246,240,0.4);
+      font-style: italic;
+    }
+
+    /* ── PRESS PHOTOS ── */
+    #photos {
+      background: var(--bg);
+      border-top: 1px solid var(--rule);
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      grid-template-rows: auto auto;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .photo-cell {
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-cell:first-child {
+      grid-row: span 2;
+      min-height: 520px;
+    }
+
+    .photo-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(15%) contrast(1.05);
+      display: block;
+    }
+
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--bg3) 0px, var(--bg3) 8px,
+        var(--bg2) 8px, var(--bg2) 16px
+      );
+      color: var(--ink-dim);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-family: monospace;
+      opacity: 0.7;
+    }
+
+    /* ── SOCIAL ── */
+    #social {
+      background: var(--cream);
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+
+    .social-heading {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 48px;
+      line-height: 1.1;
+    }
+
+    .social-heading em { font-style: italic; color: var(--accent); }
+
+    .social-links-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .social-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 32px;
+      border: 1px solid var(--rule);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+      min-width: 150px;
+      background: var(--bg);
+    }
+
+    .social-card:hover {
+      border-color: var(--accent);
+      background: var(--cream);
+    }
+
+    .spotify-artist-embed {
+      margin-top: 52px;
+      max-width: 700px;
+    }
+
+    .spotify-embed-label {
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .social-card-name {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      font-weight: 500;
+    }
+
+    .social-card-handle {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-style: italic;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--ink);
+      border-top: none;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 6vw, 88px);
+      font-weight: 700;
+      line-height: 0.9;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+    }
+
+    .contact-headline em { font-style: italic; color: var(--accent); }
+
+    .contact-sub {
+      margin-top: 24px;
+      font-size: 15px;
+      color: rgba(250,246,240,0.5);
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      padding-top: 8px;
+    }
+
+    .contact-item {}
+
+    .contact-item-role {
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .contact-item-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+
+    .contact-item a {
+      color: rgba(250,246,240,0.6);
+      text-decoration: none;
+      font-size: 14px;
+      display: block;
+      line-height: 1.8;
+      transition: color 0.2s;
+    }
+
+    .contact-item a:hover { color: var(--accent); }
+
+    .footer-bar {
+      margin-top: 72px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(250,246,240,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      font-style: italic;
+      color: rgba(250,246,240,0.3);
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(250,246,240,0.25);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow  { animation: fadeUp 0.8s ease 0.1s both; }
+    .hero-name     { animation: fadeUp 0.9s ease 0.25s both; }
+    .hero-tagline  { animation: fadeUp 0.8s ease 0.45s both; }
+    .hero-cta-row  { animation: fadeUp 0.8s ease 0.6s both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 20px 40px; }
+      section { padding: 64px 20px; }
+      .bio-grid { grid-template-columns: 1fr; gap: 40px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .photos-grid { grid-template-columns: 1fr; }
+      .photo-cell:first-child { grid-row: auto; min-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Andrew Silva</div>
+    <ul class="nav-links">
+      <li><a href="#bio">Bio</a></li>
+      <li><a href="#music">Music</a></li>
+      <li><a href="#shows">Shows</a></li>
+      <li><a href="#video">Video</a></li>
+      <li><a href="#photos">Photos</a></li>
+      <li><a href="#social">Connect</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" data-screen-label="Hero">
+    <img class="hero-img" src="uploads/photo-1777923732988.jpg" alt="Andrew Silva" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Electronic Press Kit · Las Vegas, NV</div>
+      <h1 class="hero-name">Andrew<br/><span class="italic">Silva</span></h1>
+      <p class="hero-tagline">Vintage rock rooted in blues, soul &amp; psychedelia — sounds from the American past, built for right now.</p>
+      <div class="hero-cta-row">
+        <a href="#contact" class="btn-primary">Book Andrew</a>
+        <a href="#music" class="btn-ghost">Hear the Music</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIO -->
+  <section id="bio" data-screen-label="Bio">
+    <div class="section-rule"><span class="section-label">Artist Biography</span></div>
+    <div class="bio-grid">
+      <div class="bio-body">
+        <p>Andrew Silva is a Las Vegas-based singer-songwriter crafting original music that draws from rock, blues, soul, and psychedelic rock — sounds rooted in the American past but built for right now.</p>
+        <p>His songs blend heartfelt storytelling with rich arrangements, earning comparisons to the Beatles, Pink Floyd, and Stevie Ray Vaughan. When he's not writing, he's on stage with the Andrew Silva Band, bringing those songs to life with a full live lineup built for the Las Vegas original music scene.</p>
+      </div>
+      <div>
+        <div class="bio-pull">"Sounds rooted in the American past, built for right now."</div>
+        <div class="bio-comparisons">
+          <div class="compare-label">Sounds Like</div>
+          <div class="compare-tags">
+            <span class="compare-tag">The Beatles</span>
+            <span class="compare-tag">Pink Floyd</span>
+            <span class="compare-tag">Stevie Ray Vaughan</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISCOGRAPHY -->
+  <section id="music" data-screen-label="Music">
+    <div class="section-rule"><span class="section-label">Discography</span></div>
+    <div class="disc-intro">Original songs<br/>for <em>honest ears.</em></div>
+    <div class="tracks-list">
+
+      <div class="track-row track-row--with-embed">
+        <div class="track-num">01</div>
+        <div class="track-info">
+          <div class="track-title">Rose Colored Glasses</div>
+          <div class="track-sub">Original · Rock / Soul</div>
+        </div>
+        <div class="track-type">Single</div>
+        <div class="track-embed">
+          <iframe data-testid="embed-iframe" style="border-radius:8px" src="https://open.spotify.com/embed/track/1PinLVSYSWUaZc69QRaTcB?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="track-row track-row--with-embed">
+        <div class="track-num">02</div>
+        <div class="track-info">
+          <div class="track-title">Favorite Words</div>
+          <div class="track-sub">Original · Pop / Rock</div>
+        </div>
+        <div class="track-type">Single</div>
+        <div class="track-embed">
+          <iframe data-testid="embed-iframe" style="border-radius:8px" src="https://open.spotify.com/embed/track/2kk6RjoyABqmOJLYr7iO1h?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="track-row track-row--with-embed">
+        <div class="track-num">03</div>
+        <div class="track-info">
+          <div class="track-title">Can't Get You Off of My Mind</div>
+          <div class="track-sub">Original · Rock</div>
+        </div>
+        <div class="track-type">Single</div>
+        <div class="track-embed">
+          <iframe data-testid="embed-iframe" style="border-radius:8px" src="https://open.spotify.com/embed/track/5lNRcUfQ3IPiHuGiQZMeBV?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="track-row track-row--with-embed">
+        <div class="track-num">04</div>
+        <div class="track-info">
+          <div class="track-title">Can I Love You Forever?</div>
+          <div class="track-sub">Original · Thoughtful Ballad</div>
+        </div>
+        <div class="track-type">Single</div>
+        <div class="track-embed">
+          <iframe data-testid="embed-iframe" style="border-radius:8px" src="https://open.spotify.com/embed/track/4kr584faHAVMTJGMXhVhza?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SHOW HISTORY -->
+  <section id="shows" data-screen-label="Shows">
+    <div class="section-rule"><span class="section-label">Live History</span></div>
+    <div class="shows-heading">Headlining<br/><em>Las Vegas.</em></div>
+    <div class="shows-list">
+
+      <div class="show-row show-row--featured">
+        <div class="show-date">
+          <div class="show-month">Apr</div>
+          <div class="show-year">2026</div>
+        </div>
+        <div class="show-info">
+          <div class="show-venue">Dustland</div>
+          <div class="show-detail">Headline Set · First Friday · Las Vegas, NV</div>
+        </div>
+        <div class="show-badge">Featured</div>
+      </div>
+
+      <div class="show-row">
+        <div class="show-date">
+          <div class="show-month">Nov</div>
+          <div class="show-year">2025</div>
+        </div>
+        <div class="show-info">
+          <div class="show-venue">Taverna Costera</div>
+          <div class="show-detail">Headline Set · Las Vegas, NV</div>
+        </div>
+      </div>
+
+      <div class="show-row">
+        <div class="show-date">
+          <div class="show-month">May</div>
+          <div class="show-year">2025</div>
+        </div>
+        <div class="show-info">
+          <div class="show-venue">Swan Dive</div>
+          <div class="show-detail">Headline Set · Las Vegas, NV</div>
+        </div>
+      </div>
+
+      <div class="show-row">
+        <div class="show-date">
+          <div class="show-month">May</div>
+          <div class="show-year">2025</div>
+        </div>
+        <div class="show-info">
+          <div class="show-venue">Sand Dollar Lounge</div>
+          <div class="show-detail">Headline Set · Las Vegas, NV</div>
+        </div>
+      </div>
+
+      <div class="show-row">
+        <div class="show-date">
+          <div class="show-month">Jan</div>
+          <div class="show-year">2023</div>
+        </div>
+        <div class="show-info">
+          <div class="show-venue">SoulBelly BBQ</div>
+          <div class="show-detail">Headline Set · Las Vegas, NV</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section id="video" data-screen-label="Video">
+    <div class="section-rule"><span class="section-label">Highlight Reel</span></div>
+    <div class="video-heading">Watch the<br/><em>live experience.</em></div>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/aQkWxm6jE5Y?rel=0&modestbranding=1"
+        title="Andrew Silva — Live Highlight Reel"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        style="position:absolute; inset:0; width:100%; height:100%; border:0; z-index:3;"></iframe>
+    </div>
+  </section>
+
+  <!-- PRESS PHOTOS -->
+  <section id="photos" data-screen-label="Press Photos">
+    <div class="section-rule"><span class="section-label">Press Photos</span></div>
+    <div class="photos-grid">
+      <!-- Main live shot -->
+      <div class="photo-cell">
+        <img src="uploads/Andrew Silva at Dustland 0404-10.jpg" alt="Andrew Silva live at Dustland" />
+      </div>
+      <!-- Portrait -->
+      <div class="photo-cell">
+        <img src="uploads/IMG_1793.JPG" alt="Andrew Silva portrait" />
+      </div>
+      <!-- Studio shot -->
+      <div class="photo-cell">
+        <img src="uploads/IMG_6498.JPG" alt="Andrew Silva studio" />
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section id="social" data-screen-label="Social">
+    <div class="section-rule"><span class="section-label">Connect</span></div>
+    <div class="social-heading">Find Andrew<br/><em>everywhere.</em></div>
+    <div class="social-links-grid">
+      <a class="social-card" href="https://www.instagram.com/andrew_silvamusic/" target="_blank">
+        <div class="social-card-name">Instagram</div>
+        <div class="social-card-handle">@andrew_silvamusic</div>
+      </a>
+      <a class="social-card" href="https://www.youtube.com/@AndrewSilva-music" target="_blank">
+        <div class="social-card-name">YouTube</div>
+        <div class="social-card-handle">@AndrewSilva-music</div>
+      </a>
+      <a class="social-card" href="https://open.spotify.com/artist/0douzwDDBUoMPSkexOyCZ3" target="_blank">
+        <div class="social-card-name">Spotify</div>
+        <div class="social-card-handle">Andrew Silva</div>
+      </a>
+      <a class="social-card" href="https://linktr.ee/andrewsilvamus" target="_blank">
+        <div class="social-card-name">Linktree</div>
+        <div class="social-card-handle">linktr.ee/andrewsilvamus</div>
+      </a>
+      <a class="social-card" href="/cdn-cgi/l/email-protection#03626d67716674706a6f75626e767043646e626a6f2d606c6e">
+        <div class="social-card-name">Email</div>
+        <div class="social-card-handle"><span class="__cf_email__" data-cfemail="5f3e313b2d3a282c3633293e322a2c1f38323e3633713c3032">[email&#160;protected]</span></div>
+      </a>
+    </div>
+    <div class="spotify-artist-embed">
+      <div class="spotify-embed-label">Stream on Spotify</div>
+      <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/artist/0douzwDDBUoMPSkexOyCZ3?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" data-screen-label="Contact">
+    <div class="contact-grid">
+      <div>
+        <div class="contact-headline">Let's<br/><em>make it</em><br/>happen.</div>
+        <p class="contact-sub">Available for bookings, collaborations, and venue partnerships across Las Vegas and beyond.</p>
+      </div>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-role">Booking &amp; General Inquiries</div>
+          <div class="contact-item-name">Andrew Silva</div>
+          <a href="/cdn-cgi/l/email-protection#dfbeb1bbadbaa8acb6b3a9beb2aaac9fb8b2beb6b3f1bcb0b2"><span class="__cf_email__" data-cfemail="a6c7c8c2d4c3d1d5cfcad0c7cbd3d5e6c1cbc7cfca88c5c9cb">[email&#160;protected]</span></a>
+          <a href="tel:+17024491301">(702) 449‑1301</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-role">Online</div>
+          <div class="contact-item-name">Links &amp; Streaming</div>
+          <a href="https://linktr.ee/andrewsilvamus" target="_blank">linktr.ee/andrewsilvamus</a>
+          <a href="https://www.instagram.com/andrew_silvamusic/" target="_blank">instagram.com/andrew_silvamusic</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-role">Tech Rider</div>
+          <div class="contact-item-name">Stage Requirements</div>
+          <a href="/cdn-cgi/l/email-protection#d2b3bcb6a0b7a5a1bbbea4b3bfa7a192b5bfb3bbbefcb1bdbfeda1a7b0b8b7b1a6ef86b7b1baf280bbb6b7a0f280b7a3a7b7a1a6">Request full rider →</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div class="footer-logo">Andrew Silva</div>
+      <div class="footer-copy">© 2026 Andrew Silva · Las Vegas, NV · All Rights Reserved</div>
+    </div>
+  </section>
+
+  <!-- TWEAKS -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "palette": "warm-red",
+      "heroFilter": "sharp",
+      "accentColor": "#c02a2a"
+    }/*EDITMODE-END*/;
+
+    function EPKTweaks() {
+      const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+      React.useEffect(() => {
+        const palettes = {
+          'warm-red':   { '--accent': '#c02a2a', '--accent2': '#8b1e1e', '--bg': '#f2ede6', '--bg2': '#ede5da', '--bg3': '#e0d5c5', '--ink': '#1a1410', '--ink-dim': '#6b5f52', '--cream': '#faf6f0' },
+          'dark-amber': { '--accent': '#c9952a', '--accent2': '#8a6318', '--bg': '#0f0e0c', '--bg2': '#161410', '--bg3': '#1e1b16', '--ink': '#f0ead8', '--ink-dim': '#a89f8c', '--cream': '#faf6f0' },
+          'midnight':   { '--accent': '#5b8de8', '--accent2': '#3a68c2', '--bg': '#0d1117', '--bg2': '#12181f', '--bg3': '#181f28', '--ink': '#e2e8f5', '--ink-dim': '#8a9ab8', '--cream': '#f0f4fb' },
+          'sepia':      { '--accent': '#8b5e2a', '--accent2': '#5c3a14', '--bg': '#f7f2e8', '--bg2': '#f0e8d8', '--bg3': '#e8dcc8', '--ink': '#2a1f10', '--ink-dim': '#7a6548', '--cream': '#fffdf8' },
+        };
+        const p = palettes[tweaks.palette] || palettes['warm-red'];
+        Object.entries(p).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+
+        // Hero photo filter
+        const heroImg = document.querySelector('.hero-img');
+        if (heroImg) {
+          const filters = {
+            'vintage':  'sepia(30%) contrast(1.05) brightness(0.95)',
+            'sharp':    'contrast(1.1) brightness(0.92) saturate(1.1)',
+            'bw':       'grayscale(100%) contrast(1.1)',
+            'natural':  'none',
+          };
+          heroImg.style.filter = filters[tweaks.heroFilter] || filters['vintage'];
+        }
+      }, [tweaks]);
+
+      return (
+        <TweaksPanel title="Tweaks">
+          <TweakSection label="Color Palette">
+            <TweakRadio
+              label="Theme"
+              value={tweaks.palette}
+              options={[
+                { value: 'warm-red',   label: 'Warm Red' },
+                { value: 'dark-amber', label: 'Dark Amber' },
+                { value: 'midnight',   label: 'Midnight' },
+                { value: 'sepia',      label: 'Sepia' },
+              ]}
+              onChange={v => setTweak('palette', v)}
+            />
+          </TweakSection>
+          <TweakSection label="Hero Photo">
+            <TweakRadio
+              label="Filter"
+              value={tweaks.heroFilter}
+              options={[
+                { value: 'vintage', label: 'Vintage' },
+                { value: 'sharp',   label: 'Sharp' },
+                { value: 'bw',      label: 'B&W' },
+                { value: 'natural', label: 'Natural' },
+              ]}
+              onChange={v => setTweak('heroFilter', v)}
+            />
+          </TweakSection>
+        </TweaksPanel>
+      );
+    }
+
+    const tweaksRoot = document.createElement('div');
+    document.body.appendChild(tweaksRoot);
+    ReactDOM.createRoot(tweaksRoot).render(<EPKTweaks />);
+  </script>
+
+</body>
+</html>
